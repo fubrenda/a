@@ -14,14 +14,8 @@
   revision = "7265e41f48f15fd61751e16da866af3c704bb3ab"
 
 [[projects]]
-  name = "github.com/asdine/storm"
-  packages = [".","codec","codec/json","codec/msgpack","index","internal","q"]
-  revision = "68fc73b635f890fe7ba2f3b15ce80c85b28a744f"
-  version = "v2.0.2"
-
-[[projects]]
   name = "github.com/blevesearch/bleve"
-  packages = [".","analysis","analysis/analyzer/keyword","analysis/analyzer/standard","analysis/datetime/flexible","analysis/datetime/optional","analysis/lang/en","analysis/token/lowercase","analysis/token/porter","analysis/token/stop","analysis/tokenizer/single","analysis/tokenizer/unicode","document","geo","index","index/scorch","index/scorch/mergeplan","index/scorch/segment","index/scorch/segment/mem","index/scorch/segment/zap","index/store","index/store/boltdb","index/store/gtreap","index/upsidedown","mapping","numeric","registry","search","search/collector","search/facet","search/highlight","search/highlight/format/html","search/highlight/fragmenter/simple","search/highlight/highlighter/html","search/highlight/highlighter/simple","search/query","search/scorer","search/searcher"]
+  packages = [".","analysis","analysis/analyzer/standard","analysis/datetime/flexible","analysis/datetime/optional","analysis/lang/en","analysis/token/lowercase","analysis/token/porter","analysis/token/stop","analysis/tokenizer/unicode","document","geo","index","index/scorch","index/scorch/mergeplan","index/scorch/segment","index/scorch/segment/mem","index/scorch/segment/zap","index/store","index/store/boltdb","index/store/gtreap","index/upsidedown","mapping","numeric","registry","search","search/collector","search/facet","search/highlight","search/highlight/format/html","search/highlight/fragmenter/simple","search/highlight/highlighter/html","search/highlight/highlighter/simple","search/query","search/scorer","search/searcher"]
   revision = "0456569b6240ce13fc7bfed00e10b3f99e68a3e2"
   version = "v0.6.0"
 
@@ -50,12 +44,6 @@
   revision = "64fcc1df0ed852ff9b507cbddc70ab957a2f5d4b"
 
 [[projects]]
-  name = "github.com/cayleygraph/cayley"
-  packages = ["clog","graph","graph/iterator","graph/kv","graph/kv/bolt","graph/log","graph/memstore","graph/path","graph/proto","graph/shape","internal/lru","quad","quad/pquads","quad/pquads/pio","query","query/gizmo","schema","voc","voc/rdf","voc/rdfs","voc/schema","writer"]
-  revision = "6f8446e4171ebc84955dd0ff91927510ba1aee16"
-  version = "v0.7.0"
-
-[[projects]]
   name = "github.com/coreos/bbolt"
   packages = ["."]
   revision = "48ea1b39c25fc1bab3506fbc712ecbaa842c4d2d"
@@ -74,18 +62,6 @@
   version = "v1.1.0"
 
 [[projects]]
-  name = "github.com/dlclark/regexp2"
-  packages = [".","syntax"]
-  revision = "487489b64fb796de2e55f4e8a4ad1e145f80e957"
-  version = "v1.1.6"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/dop251/goja"
-  packages = [".","ast","file","parser","token"]
-  revision = "eab79f83e840f5294250a3988a8037c476c9cdae"
-
-[[projects]]
   branch = "master"
   name = "github.com/edsrzf/mmap-go"
   packages = ["."]
@@ -98,12 +74,6 @@
   revision = "62a9a9eb44fd8932157b1a8ace2149eff5971af6"
 
 [[projects]]
-  name = "github.com/gogo/protobuf"
-  packages = ["gogoproto","proto","protoc-gen-gogo/descriptor"]
-  revision = "342cbe0a04158f6dcb03ca0079991a51a4248c02"
-  version = "v0.5"
-
-[[projects]]
   name = "github.com/golang/protobuf"
   packages = ["proto"]
   revision = "925541529c1fa6821df4e44ce2723319eb2be768"
@@ -114,24 +84,6 @@
   name = "github.com/golang/snappy"
   packages = ["."]
   revision = "553a641470496b2327abcac10b36396bd98e45c9"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/knakk/digest"
-  packages = ["."]
-  revision = "fd45becddc49e7c583e46de4af3b9b3b37e629e3"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/knakk/rdf"
-  packages = ["."]
-  revision = "b6ee24f8f40ff0580683aefb6831dad263a3f751"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/knakk/sparql"
-  packages = ["."]
-  revision = "3de19ad6a5dcee30dd5e101b47e3aedc7f69ef57"
 
 [[projects]]
   branch = "master"
@@ -170,12 +122,6 @@
   version = "1.0.2"
 
 [[projects]]
-  branch = "master"
-  name = "github.com/tylertreat/BoomFilters"
-  packages = ["."]
-  revision = "b282640b93f349cd208f8d5921df2cfaf5780ee2"
-
-[[projects]]
   name = "github.com/vmihailenco/msgpack"
   packages = [".","codes"]
   revision = "b83fb55e0632418103602b3b23851cabc5d11762"
@@ -200,12 +146,6 @@
   revision = "ff2a66f350cefa5c93a634eadb5d25bb60c85a9c"
 
 [[projects]]
-  branch = "master"
-  name = "golang.org/x/text"
-  packages = ["cases","collate","collate/build","internal","internal/colltab","internal/gen","internal/tag","internal/triegen","internal/ucd","language","transform","unicode/cldr","unicode/norm"]
-  revision = "e19ae1496984b1c655b8044a65c0300a3c878dd3"
-
-[[projects]]
   name = "google.golang.org/appengine"
   packages = [".","datastore","internal","internal/app_identity","internal/base","internal/datastore","internal/log","internal/modules","internal/remote_api"]
   revision = "150dc57a1b433e64154302bdc40b6bb8aefa313a"
@@ -214,6 +154,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "bdd2960c82fa61df1ebff451e714b8b39b0d9788a3bd5b0118c910a8847c99f3"
+  inputs-digest = "0a99d26dfa5fb695895ee4de5ab2ce1ed76c3e0f25ec4552c701cfd5c551d73e"
   solver-name = "gps-cdcl"
   solver-version = 1
