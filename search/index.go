@@ -7,7 +7,7 @@ import (
 	"github.com/blevesearch/bleve"
 	"github.com/blevesearch/bleve/analysis/lang/en"
 	"github.com/blevesearch/bleve/mapping"
-	"github.com/voidfiles/a/recordstore"
+	"github.com/fubrenda/a/recordstore"
 )
 
 type indexResoRecord struct {

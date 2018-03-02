@@ -107,7 +107,7 @@ index_fast:
 	$(WORKDIR)/a_indexer_$(OS)_$(ARCH) --inputpath=$(CACHE)/FASTChronological.marc --dbpath=$(DATA_DIR)/marcdex.db
 
 index_lcsh:
-	$(WORKDIR)/a_indexer_$(OS)_$(ARCH) --inputpath=$(CACHE)/Subjects.2014.utf8.marc --dbpath=$(DATA_DIR)/marcdex.db # -cpuprofile=./profile.out
+	$(WORKDIR)/a_indexer_$(OS)_$(ARCH) --inputpath=$(CACHE)/Subjects.2014.part01.xml --dbpath=$(DATA_DIR)/marcdex.db # -cpuprofile=./profile.out
 
 time_index_fast:
 	rm -fR $(DATA_DIR)

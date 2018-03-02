@@ -3,8 +3,8 @@ package marctools
 import (
 	"log"
 
-	"github.com/voidfiles/a/pipeline"
-	"github.com/voidfiles/a/recordstore"
+	"github.com/fubrenda/a/pipeline"
+	"github.com/fubrenda/a/recordstore"
 )
 
 type ResoRecordWriter struct {

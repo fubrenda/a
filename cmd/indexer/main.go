@@ -11,9 +11,9 @@ import (
 
 	"github.com/boutros/marc"
 	"github.com/coreos/bbolt"
-	"github.com/voidfiles/a/cli"
-	"github.com/voidfiles/a/lcsh"
-	"github.com/voidfiles/a/recordstore"
+	"github.com/fubrenda/a/cli"
+	"github.com/fubrenda/a/lcsh"
+	"github.com/fubrenda/a/recordstore"
 )
 
 func detectFormat(f *os.File) (marc.Format, error) {

@@ -25,6 +25,6 @@
   version = "v1.3.1-coreos.6"
 
 [metadata.heroku]
-  root-package = "github.com/voidfiles/a"
+  root-package = "github.com/fubrenda/a"
   go-version = "go1.9.3"
   install = [ "./..." ]

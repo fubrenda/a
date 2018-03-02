@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	"github.com/coreos/bbolt"
+	"github.com/fubrenda/a/recordstore"
+	"github.com/fubrenda/a/testtools"
 	"github.com/stretchr/testify/assert"
-	"github.com/voidfiles/a/recordstore"
-	"github.com/voidfiles/a/testtools"
 )
 
 func TestNewStorageOperation(t *testing.T) {

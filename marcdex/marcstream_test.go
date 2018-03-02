@@ -8,8 +8,8 @@ import (
 	"testing"
 
 	"github.com/boutros/marc"
+	"github.com/fubrenda/a/marcdex"
 	"github.com/stretchr/testify/assert"
-	"github.com/voidfiles/a/marcdex"
 )
 
 func testMarcXml() (io.Reader, error) {

@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/boutros/marc"
-	"github.com/voidfiles/a/marcdex"
-	"github.com/voidfiles/a/recordstore"
+	"github.com/fubrenda/a/marcdex"
+	"github.com/fubrenda/a/recordstore"
 )
 
 type TestMarcStream struct {

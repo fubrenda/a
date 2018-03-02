@@ -4,9 +4,9 @@ import (
 	"time"
 
 	"github.com/coreos/bbolt"
-	"github.com/voidfiles/a/cli"
-	"github.com/voidfiles/a/recordstore"
-	"github.com/voidfiles/a/search"
+	"github.com/fubrenda/a/cli"
+	"github.com/fubrenda/a/recordstore"
+	"github.com/fubrenda/a/search"
 )
 
 func main() {

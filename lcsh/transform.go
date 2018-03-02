@@ -2,9 +2,9 @@ package lcsh
 
 import (
 	"github.com/boutros/marc"
-	"github.com/voidfiles/a/marcdex"
-	"github.com/voidfiles/a/pipeline"
-	"github.com/voidfiles/a/recordstore"
+	"github.com/fubrenda/a/marcdex"
+	"github.com/fubrenda/a/pipeline"
+	"github.com/fubrenda/a/recordstore"
 )
 
 // Transform is a pipeline transform step to
