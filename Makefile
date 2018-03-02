@@ -20,7 +20,6 @@ DATA_DIR        :=$(CW)/data
 MISC_DIR        :=$(CW)/_misc
 TRIPLES_DIR     :=$(CW)/_triples
 WORKDIR 	      :=$(CW)/_work
-DATA_URL        :=http://id.loc.gov/static/data/authoritieschildrensSubjects.nt.skos.zip
 
 # Determine commands by looking into cmd/*
 COMMANDS=$(wildcard ${CW}/cmd/*)
@@ -87,18 +86,6 @@ covert_fast_xml_to_binary:
 	$(WORKDIR)/a_marc2marc_$(OS)_$(ARCH) -i $(CACHE)/FASTPersonal.marcxml -f m > $(CACHE)/FASTPersonal.marc
 	$(WORKDIR)/a_marc2marc_$(OS)_$(ARCH) -i $(CACHE)/FASTTitle.marcxml -f m > $(CACHE)/FASTTitle.marc
 	$(WORKDIR)/a_marc2marc_$(OS)_$(ARCH) -i $(CACHE)/FASTTopical.marcxml -f m > $(CACHE)/FASTTopical.marc
-
-# index_fast:
-# 	mkdir -p $(DATA_DIR)
-# 	# $(WORKDIR)/a_indexer_$(OS)_$(ARCH) --inputpath=$(CACHE)/FASTChronological.marc --dbpath=$(DATA_DIR)/marcdex.db
-# 	# $(WORKDIR)/a_indexer_$(OS)_$(ARCH) --inputpath=$(CACHE)/FASTCorporate.marc --dbpath=$(DATA_DIR)/marcdex.db
-# 	# $(WORKDIR)/a_indexer_$(OS)_$(ARCH) --inputpath=$(CACHE)/FASTEvent.marc --dbpath=$(DATA_DIR)/marcdex.db
-# 	$(WORKDIR)/a_indexer_$(OS)_$(ARCH) --inputpath=$(CACHE)/FASTFormGenre.marc --dbpath=$(DATA_DIR)/marcdex.db
-# 	$(WORKDIR)/a_indexer_$(OS)_$(ARCH) --inputpath=$(CACHE)/FASTGeographic.marc --dbpath=$(DATA_DIR)/marcdex.db
-# 	# $(WORKDIR)/a_indexer_$(OS)_$(ARCH) --inputpath=$(CACHE)/FASTPersonal.marc --dbpath=$(DATA_DIR)/marcdex.db
-# 	# $(WORKDIR)/a_indexer_$(OS)_$(ARCH) --inputpath=$(CACHE)/FASTTitle.marc --dbpath=$(DATA_DIR)/marcdex.db
-# 	$(WORKDIR)/a_indexer_$(OS)_$(ARCH) --inputpath=$(CACHE)/FASTTopical.marc --dbpath=$(DATA_DIR)/marcdex.db
-#
 
 index_fast:
 	$(WORKDIR)/a_indexer_$(OS)_$(ARCH) --inputpath=$(CACHE)/FASTFormGenre.marc --dbpath=$(DATA_DIR)/marcdex.db
