@@ -2,13 +2,6 @@
 
 A project to produce an easy to use authority server
 
-## Contributing
-
-1. Fork
-2. Commit
-3. Make sure tests pass
-4. Create PR
-5. Get code review
 
 ## Getting Started
 
