@@ -23,3 +23,11 @@ To build
 ```bash
 make build
 ```
+
+## Notes
+
+Filtering the wikidata dump with jq
+
+```
+time bzip2 -dc latest-all.json.bz2 |   jq -nc --stream   'fromstream(1|truncate_stream(inputs)) | select(.claims | keys_unsorted | any(contains("P244"), contains("P214"), contains("P4801"), contains("P1014"), contains("P486")))'
+```

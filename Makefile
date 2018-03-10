@@ -28,8 +28,8 @@ COMMANDS=$(wildcard ${CW}/cmd/*)
 BINS=$(foreach cmd,${COMMANDS},$(notdir ${cmd}))
 
 build-linux:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(WORKDIR)/$(PROJECT)_linux_amd64 $(GO_BUILD_FLAGS)
-	$(foreach BIN, $(BINS), (cd cmd/$(BIN) && CGO_ENABLED=0 go build -o $(WORKDIR)/$(PROJECT)_$(BIN)_linux_amd64 $(GO_BUILD_FLAGS));)
+	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o $(WORKDIR)/$(PROJECT)_linux_amd64 $(GO_BUILD_FLAGS)
+	$(foreach BIN, $(BINS), (cd cmd/$(BIN) && CGO_ENABLED=1 go build -o $(WORKDIR)/$(PROJECT)_$(BIN)_linux_amd64 $(GO_BUILD_FLAGS));)
 
 build:
 	echo $(BINS)

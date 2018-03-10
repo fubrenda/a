@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"errors"
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -13,6 +12,7 @@ import (
 	"github.com/coreos/bbolt"
 	"github.com/fubrenda/a/cli"
 	"github.com/fubrenda/a/lcsh"
+	"github.com/fubrenda/a/pipeline"
 	"github.com/fubrenda/a/recordstore"
 )
 
@@ -78,18 +78,8 @@ func main() {
 	recordStore := recordstore.MustNewRecordStore(db)
 	reader, format := marcReader(args.InputPath)
 
-	pipeline := lcsh.NewFileToRecordStorePipeline(recordStore, reader, format)
-	pipeline.Run()
-	ticker := time.NewTicker(1 * time.Second)
-	go func() {
-		for _ = range ticker.C {
-			fmt.Println(pipeline.Stats())
-		}
-	}()
-
-	pipeline.Wait()
-	ticker.Stop()
-	fmt.Println(pipeline.Stats())
+	pl := lcsh.NewFileToRecordStorePipeline(recordStore, reader, format)
+	pipeline.RunReporter(pl)
 	if stats, err := recordStore.Stats(); err != nil {
 		log.Print(err)
 	} else {
