@@ -39,7 +39,7 @@ func (t *Transform) Run(killChan chan error) {
 	close(t.Out)
 }
 
-// Transform will convert a chunk of marc.Records into a chunk of recordstore.ResoRecords
+// Transform will filter records that don't have the keys we need
 func (t *Transform) Transform(item Message) bool {
 	claims := item["claims"].(map[string]interface{})
 	for _, key := range t.expectedKeys {

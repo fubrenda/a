@@ -30,7 +30,6 @@ func main() {
 	searchIndex := search.MustNewIndex(args.IndexPath)
 
 	for recordStream.Next() {
-		println("yo")
 		records := recordStream.Value()
 		searchIndex.BatchIndex(records)
 	}
