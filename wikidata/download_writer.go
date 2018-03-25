@@ -12,12 +12,12 @@ import (
 type MessageWriter struct {
 	logger  zerolog.Logger
 	writer  io.Writer
-	in      chan Message
+	in      chan WikiDataMessage
 	name    string
 	written int64
 }
 
-func MustMessageWriter(logger zerolog.Logger, w io.Writer, in chan Message) *MessageWriter {
+func MustMessageWriter(logger zerolog.Logger, w io.Writer, in chan WikiDataMessage) *MessageWriter {
 	return &MessageWriter{
 		logger:  logger,
 		writer:  gzip.NewWriter(w),

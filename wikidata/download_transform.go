@@ -9,19 +9,19 @@ import (
 // convert marc.Record to recordstore.ResoRecord
 type Transform struct {
 	logger       zerolog.Logger
-	In           chan Message
-	Out          chan Message
+	In           chan WikiDataMessage
+	Out          chan WikiDataMessage
 	processed    int64
 	name         string
 	expectedKeys []string
 }
 
 // MustNewTransform creates a wiki data transform that filters
-func MustNewTransform(logger zerolog.Logger, in chan Message) *Transform {
+func MustNewTransform(logger zerolog.Logger, in chan WikiDataMessage) *Transform {
 	return &Transform{
 		logger:       logger,
 		In:           in,
-		Out:          make(chan Message),
+		Out:          make(chan WikiDataMessage),
 		processed:    0,
 		name:         "wikidata:message-filter",
 		expectedKeys: []string{"P244", "P214", "P4801", "P1014", "P486"},
@@ -40,8 +40,7 @@ func (t *Transform) Run(killChan chan error) {
 }
 
 // Transform will filter records that don't have the keys we need
-func (t *Transform) Transform(item Message) bool {
-	claims := item["claims"].(map[string]interface{})
+func (t *Transform) Transform(item WikiDataMessage) bool {
 	for _, key := range t.expectedKeys {
 		if _, ok := claims[key]; ok {
 			return true
