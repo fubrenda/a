@@ -14,7 +14,7 @@ import (
 type WikiDataReader struct {
 	logger zerolog.Logger
 	URL    string
-	Out    chan WikiDataMessage
+	Out    chan WikiDataEntity
 	read   int64
 	name   string
 }
@@ -45,7 +45,7 @@ func (w *WikiDataReader) Decoder(data io.Reader) {
 
 	// while the array contains values
 	for dec.More() {
-		var m WikiDataMessage
+		var m WikiDataEntity
 		// decode an array value (Message)
 		err := dec.Decode(&m)
 		if err != nil {
@@ -61,7 +61,7 @@ func (w *WikiDataReader) Decoder(data io.Reader) {
 func NewWikiDataReader(logger zerolog.Logger, url string) *WikiDataReader {
 	return &WikiDataReader{
 		logger: logger,
-		Out:    make(chan WikiDataMessage, 10),
+		Out:    make(chan WikiDataEntity, 10),
 		URL:    url,
 		name:   "wikidata-reader",
 	}

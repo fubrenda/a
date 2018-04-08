@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	// WikidataMessageBucketName is the name of DB Bucket
-	WikidataMessageBucketName = "WikiDataMessage"
+	// WikiDataEntityBucketName is the name of DB Bucket
+	WikiDataEntityBucketName = "WikiDataEntity"
 	// IdentifierKeyPrefix prefixes keys in boltdb for identifier field
 	IdentifierKeyPrefix = "identifier"
 )
@@ -41,7 +41,7 @@ func NewStorageOperation(bucket string, keyPrefix string, key string, value []by
 // MustNewRecordStore will create a new RecordStore
 func MustNewWikiDataStore(db *bolt.DB) *WikiDataStore {
 	err := db.Batch(func(tx *bolt.Tx) error {
-		_, err := tx.CreateBucketIfNotExists([]byte(WikidataMessageBucketName))
+		_, err := tx.CreateBucketIfNotExists([]byte(WikiDataEntityBucketName))
 		if err != nil {
 			return err
 		}
@@ -66,7 +66,7 @@ func ConvertMessageToStorageOperations(message WikiRecord) ([]StorageOperation, 
 		return keyValues, nil
 	}
 
-	keyValues = append(keyValues, NewStorageOperation(WikidataMessageBucketName, IdentifierKeyPrefix, message.Identifier, mainValue))
+	keyValues = append(keyValues, NewStorageOperation(WikiDataEntityBucketName, IdentifierKeyPrefix, message.Identifier, mainValue))
 
 	return keyValues, nil
 }
@@ -109,10 +109,10 @@ func (r *WikiDataStore) SaveChunk(messages []WikiRecord) error {
 }
 
 // FindByIdentifier will lookup a ResoRecord by its main identifier
-func (r *WikiDataStore) FindByIdentifier(id string) (*WikiDataMessage, error) {
-	var message WikiDataMessage
+func (r *WikiDataStore) FindByIdentifier(id string) (*WikiDataEntity, error) {
+	var message WikiDataEntity
 	err := r.db.View(func(tx *bolt.Tx) error {
-		bucket := tx.Bucket([]byte(WikidataMessageBucketName))
+		bucket := tx.Bucket([]byte(WikiDataEntityBucketName))
 		value := bucket.Get([]byte(fmt.Sprintf("%s:%s", IdentifierKeyPrefix, id)))
 
 		msgpack.Unmarshal(value, &message)
@@ -128,13 +128,13 @@ func (r *WikiDataStore) FindByIdentifier(id string) (*WikiDataMessage, error) {
 
 type RecordPage struct {
 	Prefix  []byte
-	Records []WikiDataMessage
+	Records []WikiDataEntity
 	LastKey []byte
 	More    bool
 }
 
 func (r *WikiDataStore) Scan(prefix []byte, currentKey []byte, numResults int) RecordPage {
-	records := make([]WikiDataMessage, 0)
+	records := make([]WikiDataEntity, 0)
 	startingPrefix := prefix
 	if bytes.Compare(currentKey, startingPrefix) == 1 {
 		startingPrefix = currentKey
@@ -142,7 +142,7 @@ func (r *WikiDataStore) Scan(prefix []byte, currentKey []byte, numResults int) R
 
 	var recordPage RecordPage
 	r.db.View(func(tx *bolt.Tx) error {
-		bucket := tx.Bucket([]byte(WikidataMessageBucketName))
+		bucket := tx.Bucket([]byte(WikiDataEntityBucketName))
 		c := bucket.Cursor()
 		results := 0
 		for k, v := c.Seek(startingPrefix); k != nil && bytes.HasPrefix(k, prefix); k, v = c.Next() {
@@ -155,7 +155,7 @@ func (r *WikiDataStore) Scan(prefix []byte, currentKey []byte, numResults int) R
 					More:    true,
 				}
 			}
-			var message WikiDataMessage
+			var message WikiDataEntity
 			err := msgpack.Unmarshal(v, &message)
 			if err != nil {
 				return err
@@ -179,7 +179,7 @@ func (r *WikiDataStore) Scan(prefix []byte, currentKey []byte, numResults int) R
 func (r *WikiDataStore) Stats() (string, error) {
 	var statStr string
 	err := r.db.View(func(tx *bolt.Tx) error {
-		bucket := tx.Bucket([]byte(WikidataMessageBucketName))
+		bucket := tx.Bucket([]byte(WikiDataEntityBucketName))
 		stats := bucket.Stats()
 		statBytes, err := json.Marshal(stats)
 		if err != nil {

@@ -1,43 +1,31 @@
 package wikidata
 
 import (
-	"fmt"
-	"log"
-
 	"github.com/fubrenda/a/pipeline"
-	"github.com/oliveagle/jsonpath"
 	"github.com/rs/zerolog"
 )
 
 // Transform is a pipeline transform step to
 // convert marc.Record to recordstore.ResoRecord
 type Transform struct {
-	logger    zerolog.Logger
-	In        chan WikiDataMessage
-	Out       chan WikiDataMessage
-	processed int64
-	name      string
-	filters   []*jsonpath.Compiled
+	logger             zerolog.Logger
+	In                 chan WikiDataEntity
+	Out                chan WikiDataEntity
+	processed          int64
+	name               string
+	requiredClaimCodes []string
 }
 
 // MustNewTransform creates a wiki data transform that filters
-func MustNewTransform(logger zerolog.Logger, in chan WikiDataMessage) *Transform {
-	patterns := make([]*jsonpath.Compiled, 0)
-	for _, key := range []string{"P244", "P214", "P4801", "P1014", "P486"} {
-		pat, err := jsonpath.Compile(fmt.Sprintf("$.claims.[?(@.%s)][0].id", key))
-		if err != nil {
-			log.Fatal(err)
-		}
-		patterns = append(patterns, pat)
-	}
+func MustNewTransform(logger zerolog.Logger, in chan WikiDataEntity) *Transform {
 
 	return &Transform{
-		logger:    logger,
-		In:        in,
-		Out:       make(chan WikiDataMessage),
-		processed: 0,
-		name:      "wikidata:message-filter",
-		filters:   patterns,
+		logger:             logger,
+		In:                 in,
+		Out:                make(chan WikiDataEntity),
+		processed:          0,
+		name:               "wikidata:message-filter",
+		requiredClaimCodes: []string{"P244", "P214", "P4801", "P1014", "P486"},
 	}
 }
 
@@ -53,14 +41,10 @@ func (t *Transform) Run(killChan chan error) {
 }
 
 // Transform will filter records that don't have the keys we need
-func (t *Transform) Transform(item WikiDataMessage) bool {
-	for _, pat := range t.filters {
-		res, err := pat.Lookup(item)
-		if err != nil {
-			continue
-		}
-		val := res.(string)
-		if val != "" {
+func (t *Transform) Transform(item WikiDataEntity) bool {
+
+	for _, code := range t.requiredClaimCodes {
+		if _, ok := item.Claims[code]; ok {
 			return true
 		}
 	}

@@ -12,7 +12,7 @@ import (
 type WikiDataFileReader struct {
 	logger  zerolog.Logger
 	chunker *MessageStream
-	Out     chan []WikiDataMessage
+	Out     chan []WikiDataEntity
 	read    int64
 	name    string
 }
@@ -21,7 +21,7 @@ type WikiDataFileReader struct {
 func NewWikiDataFileReader(logger zerolog.Logger, reader io.Reader) (*WikiDataFileReader, error) {
 	fileReader := &WikiDataFileReader{
 		logger: logger,
-		Out:    make(chan []WikiDataMessage, 10),
+		Out:    make(chan []WikiDataEntity, 10),
 		chunker: &MessageStream{
 			chunkSize: 1000,
 			data:      json.NewDecoder(reader),

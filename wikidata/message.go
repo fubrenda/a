@@ -9,17 +9,17 @@ type MessageStream struct {
 	chunkSize      int
 	data           *json.Decoder
 	done           bool
-	currentResults []WikiDataMessage
+	currentResults []WikiDataEntity
 }
 
 func (ms *MessageStream) Next() bool {
 	if ms.done {
 		return false
 	}
-	ms.currentResults = make([]WikiDataMessage, 0)
+	ms.currentResults = make([]WikiDataEntity, 0)
 
 	for ms.data.More() {
-		var msg WikiDataMessage
+		var msg WikiDataEntity
 		// decode an array value (Message)
 		err := ms.data.Decode(&msg)
 		if err != nil {
@@ -36,6 +36,6 @@ func (ms *MessageStream) Next() bool {
 	return false
 }
 
-func (ms *MessageStream) Value() []WikiDataMessage {
+func (ms *MessageStream) Value() []WikiDataEntity {
 	return ms.currentResults
 }

@@ -32,7 +32,7 @@ type WikiRecord struct {
 // convert marc.Record to recordstore.ResoRecord
 type WikiDataToWikirecordTransform struct {
 	logger    zerolog.Logger
-	In        chan []WikiDataMessage
+	In        chan []WikiDataEntity
 	Out       chan []WikiRecord
 	processed int64
 	name      string
@@ -40,7 +40,7 @@ type WikiDataToWikirecordTransform struct {
 }
 
 // MustNewTransform creates a wiki data transform that filters
-func MustNewWikiDataToWikirecordTransform(logger zerolog.Logger, in chan []WikiDataMessage) *WikiDataToWikirecordTransform {
+func MustNewWikiDataToWikirecordTransform(logger zerolog.Logger, in chan []WikiDataEntity) *WikiDataToWikirecordTransform {
 	var patterns map[string]*jsonpath.Compiled
 	for key, val := range PatternsToMatch {
 		pat, err := jsonpath.Compile(val)
@@ -78,7 +78,7 @@ func Lookup(obj interface{}, pat *jsonpath.Compiled) interface{} {
 }
 
 // Transform will filter records that don't have the keys we need
-func (t *WikiDataToWikirecordTransform) Transform(messages []WikiDataMessage) []WikiRecord {
+func (t *WikiDataToWikirecordTransform) Transform(messages []WikiDataEntity) []WikiRecord {
 	msgs := make([]WikiRecord, 0)
 
 	for _, msg := range messages {
