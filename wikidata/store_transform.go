@@ -2,30 +2,17 @@ package wikidata
 
 import (
 	"github.com/fubrenda/a/pipeline"
-	"github.com/oliveagle/jsonpath"
 	"github.com/rs/zerolog"
 )
 
-var ClaimsToDecode = []string{"P244"} // , "P214", "P4801", "P1014", "P486"
-
-var PatternsToMatch = map[string]string{
-	"Identifier":       "$.id",
-	"Heading":          "$.labels[language,value]",
-	"LCSHIdentifier":   "$.claims.P244[:].mainsnak.datavalue.value",
-	"VIAFIdentifier":   "$.claims.P214[:].mainsnak.datavalue.value",
-	"LCMARCIdentifier": "$.claims.P4801[:].mainsnak.datavalue.value",
-	"AATIdentifier":    "$.claims.P1014[:].mainsnak.datavalue.value",
-	"MESHIdentifier":   "$.claims.P486[:].mainsnak.datavalue.value",
-}
-
 type WikiRecord struct {
-	Identifier       string            `json:"identifier,omitempty"`
-	Heading          map[string]string `json:"heading,omitempty"`
-	LCSHIdentifier   []string          `json:"lcsh_identifiers,omitempty"`
-	VIAFIdentifier   []string          `json:"viaf_ddentifiers,omitempty"`
-	LCMARCIdentifier []string          `json:"lcmarc_identifiers,omitempty"`
-	AATIdentifier    []string          `json:"aat_identifiers,omitempty"`
-	MESHIdentifier   []string          `json:"mesh_identifiers,omitempty"`
+	Identifier       string   `json:"identifier,omitempty"`
+	Heading          LabelMap `json:"heading,omitempty"`
+	LCSHIdentifier   []string `json:"lcsh_identifiers,omitempty"`
+	VIAFIdentifier   []string `json:"viaf_ddentifiers,omitempty"`
+	LCMARCIdentifier []string `json:"lcmarc_identifiers,omitempty"`
+	AATIdentifier    []string `json:"aat_identifiers,omitempty"`
+	MESHIdentifier   []string `json:"mesh_identifiers,omitempty"`
 }
 
 // WikiDataToWikirecordTransform is a pipeline transform step to
@@ -36,26 +23,17 @@ type WikiDataToWikirecordTransform struct {
 	Out       chan []WikiRecord
 	processed int64
 	name      string
-	patterns  map[string]*jsonpath.Compiled
 }
 
 // MustNewTransform creates a wiki data transform that filters
 func MustNewWikiDataToWikirecordTransform(logger zerolog.Logger, in chan []WikiDataEntity) *WikiDataToWikirecordTransform {
-	var patterns map[string]*jsonpath.Compiled
-	for key, val := range PatternsToMatch {
-		pat, err := jsonpath.Compile(val)
-		if err != nil {
-			panic(err)
-		}
-		patterns[key] = pat
-	}
+
 	return &WikiDataToWikirecordTransform{
 		logger:    logger,
 		In:        in,
 		Out:       make(chan []WikiRecord),
 		processed: 0,
 		name:      "wikidata:wiki-to-internal",
-		patterns:  patterns,
 	}
 }
 
@@ -68,13 +46,17 @@ func (t *WikiDataToWikirecordTransform) Run(killChan chan error) {
 	close(t.Out)
 }
 
-func Lookup(obj interface{}, pat *jsonpath.Compiled) interface{} {
-	res, err := pat.Lookup(obj)
-	if err != nil {
-		return ""
+func getExternalID(claimCode string, item WikiDataEntity) []string {
+	ids := make([]string, 0)
+	claims, ok := item.Claims[claimCode]
+	if !ok {
+		return ids
 	}
 
-	return res
+	for _, claim := range claims {
+		ids = append(ids, claim.Mainsnak.DataValue.Value.(string))
+	}
+	return ids
 }
 
 // Transform will filter records that don't have the keys we need
@@ -83,13 +65,13 @@ func (t *WikiDataToWikirecordTransform) Transform(messages []WikiDataEntity) []W
 
 	for _, msg := range messages {
 		wikiRecord := WikiRecord{
-			Identifier:       Lookup(msg, t.patterns["Identifier"]).(string),
-			Heading:          Lookup(msg, t.patterns["Heading"]).(map[string]string),
-			LCSHIdentifier:   Lookup(msg, t.patterns["LCSHIdentifier"]).([]string),
-			VIAFIdentifier:   Lookup(msg, t.patterns["VIAFIdentifier"]).([]string),
-			LCMARCIdentifier: Lookup(msg, t.patterns["LCMARCIdentifier"]).([]string),
-			AATIdentifier:    Lookup(msg, t.patterns["AATIdentifier"]).([]string),
-			MESHIdentifier:   Lookup(msg, t.patterns["MESHIdentifier"]).([]string),
+			Identifier:       msg.ID,
+			Heading:          msg.Labels,
+			LCSHIdentifier:   getExternalID("P244", msg),
+			VIAFIdentifier:   getExternalID("P214", msg),
+			LCMARCIdentifier: getExternalID("P4801", msg),
+			AATIdentifier:    getExternalID("P1014", msg),
+			MESHIdentifier:   getExternalID("P486", msg),
 		}
 
 		msgs = append(msgs, wikiRecord)

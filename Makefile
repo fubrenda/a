@@ -68,6 +68,9 @@ clean:
 test:
 	CGO_ENABLED=0 go test $(GOPACKAGES)
 
+coverage:
+	CGO_ENABLED=0 go test -cover $(GOPACKAGES)
+
 test-race:
 	CGO_ENABLED=1 go test -race $(GOPACKAGES)
 
