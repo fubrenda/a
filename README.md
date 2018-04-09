@@ -28,6 +28,11 @@ make build
 
 Filtering the wikidata dump with jq
 
+
+
+
 ```
 time bzip2 -dc latest-all.json.bz2 |   jq -nc --stream   'fromstream(1|truncate_stream(inputs)) | select(.claims | keys_unsorted | any(contains("P244"), contains("P214"), contains("P4801"), contains("P1014"), contains("P486")))'
+
+time curl "https://dumps.wikimedia.org/wikidatawiki/entities/latest-all.json.bz2" | bzip2 -dc | jq -nc --stream   'fromstream(1|truncate_stream(inputs)) | .claims.P244[].mainsnak.datavalue'
 ```

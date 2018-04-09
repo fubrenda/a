@@ -5,16 +5,6 @@ import (
 	"github.com/rs/zerolog"
 )
 
-type WikiRecord struct {
-	Identifier       string   `json:"identifier,omitempty"`
-	Heading          LabelMap `json:"heading,omitempty"`
-	LCSHIdentifier   []string `json:"lcsh_identifiers,omitempty"`
-	VIAFIdentifier   []string `json:"viaf_ddentifiers,omitempty"`
-	LCMARCIdentifier []string `json:"lcmarc_identifiers,omitempty"`
-	AATIdentifier    []string `json:"aat_identifiers,omitempty"`
-	MESHIdentifier   []string `json:"mesh_identifiers,omitempty"`
-}
-
 // WikiDataToWikirecordTransform is a pipeline transform step to
 // convert marc.Record to recordstore.ResoRecord
 type WikiDataToWikirecordTransform struct {

@@ -102,4 +102,6 @@ time_index_everything:
 	time make index_fast index_lcsh
 
 fetch_wikidata:
+	rm -fR $(DATA_DIR)
+	mkdir -p $(DATA_DIR)
 	$(WORKDIR)/a_fetch_wikidata_$(OS)_$(ARCH)

@@ -15,7 +15,27 @@ const (
 	WikiDataEntityBucketName = "WikiDataEntity"
 	// IdentifierKeyPrefix prefixes keys in boltdb for identifier field
 	IdentifierKeyPrefix = "identifier"
+	// LCSHIdentifierPrefix prefixes keys in boltdb for lcsh field
+	LCSHIdentifierPrefix = "lcsh"
+	// VIAFIdentifierPrefix prefixes keys in boltdb for viaf field
+	VIAFIdentifierPrefix = "viaf"
+	// LCMARCIdentifierPrefix prefixes keys in boltdb for lcmarc field
+	LCMARCIdentifierPrefix = "lcmarc"
+	// AATIdentifierPrefix prefixes keys in boltdb for aat field
+	AATIdentifierPrefix = "aat"
+	// MESHIdentifierPrefix prefixes keys in boltdb for mesh field
+	MESHIdentifierPrefix = "mesh"
 )
+
+type WikiRecord struct {
+	Identifier       string   `json:"identifier,omitempty"`
+	Heading          LabelMap `json:"heading,omitempty"`
+	LCSHIdentifier   []string `json:"lcsh_identifiers,omitempty"`
+	VIAFIdentifier   []string `json:"viaf_ddentifiers,omitempty"`
+	LCMARCIdentifier []string `json:"lcmarc_identifiers,omitempty"`
+	AATIdentifier    []string `json:"aat_identifiers,omitempty"`
+	MESHIdentifier   []string `json:"mesh_identifiers,omitempty"`
+}
 
 // RecordStore will store a record into an index
 type WikiDataStore struct {
@@ -57,18 +77,32 @@ func MustNewWikiDataStore(db *bolt.DB) *WikiDataStore {
 	}
 }
 
+func storageOperationsForAltID(ops []StorageOperation, altIdPrefix string, mainId []byte, ids []string) []StorageOperation {
+	for _, id := range ids {
+		ops = append(ops, NewStorageOperation(WikiDataEntityBucketName, altIdPrefix, id, mainId))
+	}
+
+	return ops
+}
+
 // ConvertMessageToStorageOperations returns a list of operations to be stored
 func ConvertMessageToStorageOperations(message WikiRecord) ([]StorageOperation, error) {
-	keyValues := make([]StorageOperation, 0)
+	ops := make([]StorageOperation, 0)
 	mainValue, err := msgpack.Marshal(message)
 
 	if err != nil {
-		return keyValues, nil
+		return ops, nil
 	}
 
-	keyValues = append(keyValues, NewStorageOperation(WikiDataEntityBucketName, IdentifierKeyPrefix, message.Identifier, mainValue))
+	id := []byte(message.Identifier)
 
-	return keyValues, nil
+	ops = append(ops, NewStorageOperation(WikiDataEntityBucketName, IdentifierKeyPrefix, message.Identifier, mainValue))
+	storageOperationsForAltID(ops, LCSHIdentifierPrefix, id, message.LCSHIdentifier)
+	storageOperationsForAltID(ops, VIAFIdentifierPrefix, id, message.VIAFIdentifier)
+	storageOperationsForAltID(ops, LCMARCIdentifierPrefix, id, message.LCMARCIdentifier)
+	storageOperationsForAltID(ops, AATIdentifierPrefix, id, message.AATIdentifier)
+	storageOperationsForAltID(ops, MESHIdentifierPrefix, id, message.MESHIdentifier)
+	return ops, nil
 }
 
 //HandleOperation will persist an operation into the database

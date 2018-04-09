@@ -108,12 +108,12 @@ type References []ReferenceSnaks
 
 //Claim consists of a main value (or main Snak) and a number of qualifier Snaks
 type Claim struct {
-	ID         string `json:"id"`
-	Type       string `json:"type"`
-	Rank       string `json:"rank"`
-	Mainsnak   Snak   `json:"mainsnak"`
-	Qualifiers *map[string][]QualifierSnak
-	References *References
+	ID         string                      `json:"id"`
+	Type       string                      `json:"type"`
+	Rank       string                      `json:"rank"`
+	Mainsnak   Snak                        `json:"mainsnak"`
+	Qualifiers *map[string][]QualifierSnak `json:"qualifiers,omitempty"`
+	References *References                 `json:"references,omitempty"`
 }
 
 //LanguageValue represents the language code and value of a label or descripition
