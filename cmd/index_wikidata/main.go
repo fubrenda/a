@@ -1,7 +1,7 @@
 package main
 
 import (
-	"compress/bzip2"
+	"compress/gzip"
 	"os"
 	"time"
 
@@ -13,13 +13,16 @@ import (
 
 func main() {
 	logger := logzer.MustNewLogzer("index_wikidata", false, os.Stdout)
-	inFile, err := os.Open("./data/out.json.bz2")
+	inFile, err := os.Open("./data/out.json.gz")
 	if err != nil {
 		logger.Fatal().Err(err).Msg("Failed to open output file")
 	}
 	defer inFile.Close()
 
-	decodedFile := bzip2.NewReader(inFile)
+	decodedFile, err := gzip.NewReader(inFile)
+	if err != nil {
+		logger.Fatal().Err(err).Msg("Failed to create gzip reader")
+	}
 
 	db, err := bolt.Open("./data/wikidata.db", 0666, &bolt.Options{
 		Timeout:        1 * time.Second,
@@ -28,7 +31,7 @@ func main() {
 	})
 
 	if err != nil {
-		logger.Fatal().Err(err)
+		logger.Fatal().Err(err).Msg("Failed to open wikidata.db")
 	}
 
 	wikiStore := wikidata.MustNewWikiDataStore(db)

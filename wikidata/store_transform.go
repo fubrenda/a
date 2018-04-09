@@ -44,7 +44,9 @@ func getExternalID(claimCode string, item WikiDataEntity) []string {
 	}
 
 	for _, claim := range claims {
-		ids = append(ids, claim.Mainsnak.DataValue.Value.(string))
+		if claim.Mainsnak.Snaktype == "value" {
+			ids = append(ids, claim.Mainsnak.DataValue.Value.(string))
+		}
 	}
 	return ids
 }

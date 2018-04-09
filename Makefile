@@ -105,3 +105,7 @@ fetch_wikidata:
 	rm -fR $(DATA_DIR)
 	mkdir -p $(DATA_DIR)
 	$(WORKDIR)/a_fetch_wikidata_$(OS)_$(ARCH)
+
+
+index_wikidata:
+	$(WORKDIR)/a_index_wikidata_$(OS)_$(ARCH)
