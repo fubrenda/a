@@ -7,13 +7,14 @@ import (
 
 // AOptions is the configuration options for stuff
 type AOptions struct {
-	Db        string
-	Dbpath    string
-	InputPath string
-	IndexPath string
-	Nosync    bool
-	IP        string
-	Port      string
+	Db         string
+	Dbpath     string
+	InputPath  string
+	IndexPath  string
+	Nosync     bool
+	IP         string
+	Port       string
+	WikidataDB string
 }
 
 func getEnvString(key string, fallback *string) string {
@@ -33,16 +34,18 @@ func GetArgs() AOptions {
 	nosync := flag.Bool("nosync", true, "Should db not sync to disk (default true)")
 	ip := flag.String("ip", "127.0.0.1", "IP server should bind too (default 127.0.0.1)")
 	port := flag.String("port", "8080", "Port server should bind too (default 8080)")
+	wikidatadb := flag.String("wikidatadb", "", "path to wikidata db")
 
 	flag.Parse()
 
 	return AOptions{
-		Db:        getEnvString("A_DB", db),
-		Dbpath:    getEnvString("A_DBPATH", dbpath),
-		InputPath: getEnvString("A_INPUTPATH", inputpath),
-		Nosync:    *nosync,
-		IP:        getEnvString("A_IP", ip),
-		Port:      getEnvString("PORT", port),
-		IndexPath: getEnvString("A_INDEXPATH", indexpath),
+		Db:         getEnvString("A_DB", db),
+		Dbpath:     getEnvString("A_DBPATH", dbpath),
+		InputPath:  getEnvString("A_INPUTPATH", inputpath),
+		Nosync:     *nosync,
+		IP:         getEnvString("A_IP", ip),
+		Port:       getEnvString("PORT", port),
+		IndexPath:  getEnvString("A_INDEXPATH", indexpath),
+		WikidataDB: getEnvString("A_WIKIDATADB", wikidatadb),
 	}
 }

@@ -65,6 +65,16 @@ func marcReader(inputPath string) (io.Reader, marc.Format) {
 func main() {
 	args := cli.GetArgs()
 
+	wikidatadb, err := bolt.Open(args.WikidataDB, 0666, &bolt.Options{
+		Timeout:        1 * time.Second,
+		NoSync:         true,
+		NoFreelistSync: true,
+	})
+	defer wikidatadb.Close()
+	if err != nil {
+		panic(err)
+	}
+
 	db, err := bolt.Open(args.Dbpath, 0666, &bolt.Options{
 		Timeout:        1 * time.Second,
 		NoSync:         true,
@@ -78,7 +88,7 @@ func main() {
 	recordStore := recordstore.MustNewRecordStore(db)
 	reader, format := marcReader(args.InputPath)
 
-	pl := lcsh.NewFileToRecordStorePipeline(recordStore, reader, format)
+	pl := lcsh.NewFileToRecordStorePipeline(recordStore, wikidatadb, reader, format)
 	pipeline.RunReporter(pl)
 	if stats, err := recordStore.Stats(); err != nil {
 		log.Print(err)
