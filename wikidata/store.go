@@ -36,6 +36,8 @@ type WikiRecord struct {
 	MESHIdentifier   []string `json:"mesh_identifiers,omitempty"`
 }
 
+type WikiRecordResultSet map[string]WikiRecord
+
 // RecordStore will store a record into an index
 type WikiDataStore struct {
 	db *bolt.DB
@@ -157,6 +159,30 @@ func (r *WikiDataStore) FindByIdentifier(id string) (*WikiDataEntity, error) {
 	}
 
 	return &message, nil
+}
+
+// FindManyByPrefixIdentifier will lookup a ResoRecord by its main identifier
+func (r *WikiDataStore) FindManyByPrefixIdentifier(prefix string, ids []string) (WikiRecordResultSet, error) {
+	var resultSet WikiRecordResultSet
+	err := r.db.View(func(tx *bolt.Tx) error {
+		bucket := tx.Bucket([]byte(WikiDataEntityBucketName))
+		for _, id := range ids {
+			key := fmt.Sprintf("%s:%s", prefix, id)
+			var message WikiRecord
+			value := bucket.Get([]byte(key))
+			msgpack.Unmarshal(value, &message)
+
+			resultSet[key] = message
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return resultSet, nil
 }
 
 type RecordPage struct {
