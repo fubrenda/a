@@ -141,8 +141,8 @@ func (r *WikiDataStore) SaveChunk(messages []WikiRecord) error {
 }
 
 // FindByIdentifier will lookup a ResoRecord by its main identifier
-func (r *WikiDataStore) FindByIdentifier(id string) (*WikiDataEntity, error) {
-	var message WikiDataEntity
+func (r *WikiDataStore) FindByIdentifier(id string) (*WikiRecord, error) {
+	var message WikiRecord
 	err := r.db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(WikiDataEntityBucketName))
 		value := bucket.Get([]byte(fmt.Sprintf("%s:%s", IdentifierKeyPrefix, id)))
@@ -160,16 +160,24 @@ func (r *WikiDataStore) FindByIdentifier(id string) (*WikiDataEntity, error) {
 
 // FindManyByPrefixIdentifier will lookup a ResoRecord by its main identifier
 func (r *WikiDataStore) FindManyByPrefixIdentifier(prefix string, ids []string) (WikiRecordResultSet, error) {
-	var resultSet WikiRecordResultSet
+	resultSet := make(WikiRecordResultSet)
 	err := r.db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(WikiDataEntityBucketName))
 		for _, id := range ids {
 			key := fmt.Sprintf("%s:%s", prefix, id)
-			var message WikiRecord
-			value := bucket.Get([]byte(key))
-			msgpack.Unmarshal(value, &message)
+			realID := bucket.Get([]byte(key))
+			if realID == nil {
+				continue
+			}
+			message, err := r.FindByIdentifier(string(realID))
+			if err != nil {
+				continue
+			}
+			if message == nil {
+				continue
+			}
 
-			resultSet[key] = message
+			resultSet[id] = *message
 		}
 
 		return nil

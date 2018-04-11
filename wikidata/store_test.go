@@ -85,3 +85,53 @@ func TestHandleOperation(t *testing.T) {
 		return nil
 	})
 }
+
+func TestSaveChunk(t *testing.T) {
+	chunk := []wikidata.WikiRecord{
+		wikidata.WikiRecord{
+			Identifier: "myid1",
+			Heading: wikidata.LabelMap{
+				"en": wikidata.LanguageValue{
+					Language: "en",
+					Value:    "aaa",
+				},
+			},
+			LCSHIdentifier: []string{
+				"n2345",
+			},
+		},
+		wikidata.WikiRecord{
+			Identifier: "myid2",
+			Heading: wikidata.LabelMap{
+				"en": wikidata.LanguageValue{
+					Language: "en",
+					Value:    "bbb",
+				},
+			},
+			LCSHIdentifier: []string{
+				"n2346",
+			},
+		},
+	}
+
+	wikidatadb := getDb()
+	wikidataStore := wikidata.MustNewWikiDataStore(wikidatadb)
+	wikidataStore.SaveChunk(chunk)
+	entry, err := wikidataStore.FindByIdentifier("myid2")
+	assert.Nil(t, err)
+	assert.NotNil(t, entry)
+	results, err := wikidataStore.FindManyByPrefixIdentifier(
+		wikidata.LCSHIdentifierPrefix,
+		[]string{
+			"n2345",
+			"n2346",
+		},
+	)
+	if err != nil {
+		panic(err)
+	}
+	_, ok1 := results["n2345"]
+	assert.True(t, ok1)
+	_, ok2 := results["n2346"]
+	assert.True(t, ok2)
+}
