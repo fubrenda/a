@@ -14,6 +14,7 @@ import (
 	"github.com/fubrenda/a/lcsh"
 	"github.com/fubrenda/a/pipeline"
 	"github.com/fubrenda/a/recordstore"
+	"github.com/fubrenda/a/wikidata"
 )
 
 func detectFormat(f *os.File) (marc.Format, error) {
@@ -75,6 +76,8 @@ func main() {
 		panic(err)
 	}
 
+	wikidatadbStore := wikidata.MustNewWikiDataStore(wikidatadb)
+
 	db, err := bolt.Open(args.Dbpath, 0666, &bolt.Options{
 		Timeout:        1 * time.Second,
 		NoSync:         true,
@@ -88,7 +91,7 @@ func main() {
 	recordStore := recordstore.MustNewRecordStore(db)
 	reader, format := marcReader(args.InputPath)
 
-	pl := lcsh.NewFileToRecordStorePipeline(recordStore, wikidatadb, reader, format)
+	pl := lcsh.NewFileToRecordStorePipeline(recordStore, wikidatadbStore, reader, format)
 	pipeline.RunReporter(pl)
 	if stats, err := recordStore.Stats(); err != nil {
 		log.Print(err)

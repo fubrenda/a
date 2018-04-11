@@ -98,21 +98,18 @@ func ConvertMessageToStorageOperations(message WikiRecord) ([]StorageOperation, 
 	id := []byte(message.Identifier)
 
 	ops = append(ops, NewStorageOperation(WikiDataEntityBucketName, IdentifierKeyPrefix, message.Identifier, mainValue))
-	storageOperationsForAltID(ops, LCSHIdentifierPrefix, id, message.LCSHIdentifier)
-	storageOperationsForAltID(ops, VIAFIdentifierPrefix, id, message.VIAFIdentifier)
-	storageOperationsForAltID(ops, LCMARCIdentifierPrefix, id, message.LCMARCIdentifier)
-	storageOperationsForAltID(ops, AATIdentifierPrefix, id, message.AATIdentifier)
-	storageOperationsForAltID(ops, MESHIdentifierPrefix, id, message.MESHIdentifier)
+	ops = storageOperationsForAltID(ops, LCSHIdentifierPrefix, id, message.LCSHIdentifier)
+	ops = storageOperationsForAltID(ops, VIAFIdentifierPrefix, id, message.VIAFIdentifier)
+	ops = storageOperationsForAltID(ops, LCMARCIdentifierPrefix, id, message.LCMARCIdentifier)
+	ops = storageOperationsForAltID(ops, AATIdentifierPrefix, id, message.AATIdentifier)
+	ops = storageOperationsForAltID(ops, MESHIdentifierPrefix, id, message.MESHIdentifier)
 	return ops, nil
 }
 
 //HandleOperation will persist an operation into the database
 func HandleOperation(tx *bolt.Tx, operation StorageOperation) error {
 	bucket := tx.Bucket([]byte(operation.Bucket))
-	// val := bucket.Get(operation.Key)
-	// if val != nil {
-	// 	log.Printf("While fetching key %s found exisisting %s", string(operation.Key), string(operation.Value))
-	// }
+
 	err := bucket.Put(operation.Key, operation.Value)
 
 	if err != nil {

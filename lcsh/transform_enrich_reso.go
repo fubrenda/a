@@ -1,9 +1,9 @@
 package lcsh
 
 import (
-	"github.com/coreos/bbolt"
 	"github.com/fubrenda/a/pipeline"
 	"github.com/fubrenda/a/recordstore"
+	"github.com/fubrenda/a/wikidata"
 )
 
 // EnrichResoTransform is a pipeline transform step to
@@ -13,11 +13,11 @@ type EnrichResoTransform struct {
 	Out        chan []recordstore.ResoRecord
 	processed  int64
 	name       string
-	wikidatadb *bolt.DB
+	wikidatadb *wikidata.WikiDataStore
 }
 
 // MustNewEnrichResoTransform creates a lcsh Transform
-func MustNewEnrichResoTransform(in chan []recordstore.ResoRecord, wikidatadb *bolt.DB) *EnrichResoTransform {
+func MustNewEnrichResoTransform(in chan []recordstore.ResoRecord, wikidatadb *wikidata.WikiDataStore) *EnrichResoTransform {
 	return &EnrichResoTransform{
 		In:         in,
 		Out:        make(chan []recordstore.ResoRecord),
