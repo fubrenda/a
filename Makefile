@@ -112,3 +112,6 @@ fetch_wikidata:
 
 index_wikidata:
 	$(WORKDIR)/a_index_wikidata_$(OS)_$(ARCH)
+
+targets:
+	make -rpn | sed -n -e '/^$/ { n ; /^[^ .#][^ ]*:/p ; }' | egrep --color '^[^ ]*:'

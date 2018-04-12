@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"log"
 
 	"github.com/coreos/bbolt"
 	"github.com/vmihailenco/msgpack"
@@ -120,10 +119,10 @@ func ConvertRecordToStorageOperations(record ResoRecord) ([]StorageOperation, er
 //HandleOperation will persist an operation into the database
 func HandleOperation(tx *bolt.Tx, operation StorageOperation) error {
 	bucket := tx.Bucket([]byte(operation.Bucket))
-	val := bucket.Get(operation.Key)
-	if val != nil {
-		log.Printf("While fetching key %s found exisisting %s", string(operation.Key), string(operation.Value))
-	}
+	// val := bucket.Get(operation.Key)
+	// if val != nil {
+	// 	log.Printf("While fetching key %s found exisisting %s", string(operation.Key), string(operation.Value))
+	// }
 	err := bucket.Put(operation.Key, operation.Value)
 
 	if err != nil {

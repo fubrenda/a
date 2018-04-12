@@ -1,6 +1,8 @@
 package lcsh
 
 import (
+	"strings"
+
 	"github.com/fubrenda/a/pipeline"
 	"github.com/fubrenda/a/recordstore"
 	"github.com/fubrenda/a/wikidata"
@@ -37,11 +39,24 @@ func (t *EnrichResoTransform) Run(killChan chan error) {
 
 // Transform will convert a chunk of marc.Records into a chunk of recordstore.ResoRecords
 func (t *EnrichResoTransform) Transform(chunk []recordstore.ResoRecord) []recordstore.ResoRecord {
+	lcshIDs := make([]string, len(chunk))
 	for i, record := range chunk {
-		chunk[i] = record
-		t.processed++
+		lcshIDs[i] = strings.Replace(record.Identifier, "sh", "n", 1)
 	}
 
+	wikidata, err := t.wikidatadb.FindManyByPrefixIdentifier(wikidata.LCSHIdentifierPrefix, lcshIDs)
+	if err != nil {
+		panic(err)
+	}
+
+	for i, record := range chunk {
+		if wikiRecord, ok := wikidata[record.Identifier]; ok {
+			for _, label := range wikiRecord.Heading {
+				chunk[i].AltHeading = append(chunk[i].AltHeading, label.Value)
+			}
+		}
+		t.processed++
+	}
 	return chunk
 }
 
