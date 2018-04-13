@@ -113,5 +113,8 @@ fetch_wikidata:
 index_wikidata:
 	$(WORKDIR)/a_index_wikidata_$(OS)_$(ARCH)
 
+server:
+	$(WORKDIR)/a_server_$(OS)_$(ARCH) --dbpath=$(DATA_DIR)/marcdex.db --wikidatadb=$(DATA_DIR)/wikidata.db
+
 targets:
 	make -rpn | sed -n -e '/^$/ { n ; /^[^ .#][^ ]*:/p ; }' | egrep --color '^[^ ]*:'

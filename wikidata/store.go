@@ -191,10 +191,10 @@ func (r *WikiDataStore) FindManyByPrefixIdentifier(prefix string, ids []string) 
 }
 
 type RecordPage struct {
-	Prefix  []byte
-	Records []WikiDataEntity
-	LastKey []byte
-	More    bool
+	Prefix  []byte           `json:"prefix"`
+	Records []WikiDataEntity `json:"records"`
+	LastKey []byte           `json:"last_key"`
+	More    bool             `json:"more"`
 }
 
 func (r *WikiDataStore) Scan(prefix []byte, currentKey []byte, numResults int) RecordPage {
@@ -218,6 +218,7 @@ func (r *WikiDataStore) Scan(prefix []byte, currentKey []byte, numResults int) R
 					LastKey: []byte(k),
 					More:    true,
 				}
+				return nil
 			}
 			var message WikiDataEntity
 			err := msgpack.Unmarshal(v, &message)
